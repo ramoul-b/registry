@@ -1,0 +1,48 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: msregistryapp
+    container_name: msregistryapp
+    restart: unless-stopped
+    tty: true
+    environment:
+      APP_NAME: MS_registry
+      APP_ENV: local
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - laravelnet
+    ports:
+      - "8081:80"
+
+  db:
+    image: mysql:5.7
+    container_name: mysql2
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'hk+gnG552O@Q4i2GE9N$P2!'
+    volumes:
+      - dbdata2:/var/lib/mysql
+    networks:
+      - laravelnet
+
+  redis:
+    image: redis:latest
+    container_name: msregistryredis
+    networks:
+      - laravelnet
+    volumes:
+      - redisdata:/data
+
+volumes:
+  dbdata2:
+  redisdata:
+
+networks:
+  laravelnet:
+    driver: bridge
